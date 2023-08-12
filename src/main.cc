@@ -1,9 +1,9 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<tuple>
-#include<format>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <tuple>
 #include <bitset>
+#include <fmt/core.h>
 #include "vendor/json.hh"
 
 using namespace std;
@@ -125,7 +125,7 @@ struct parse_state {
                 if (this->row == 0) {
                     if (this->cell == 1) {
                         this->valid = false;
-                        this->error_desc = std::format("At row {}, cell {}, near >>>{}<<<: Only one column found", 
+                        this->error_desc = fmt::format("At row {}, cell {}, near >>>{}<<<: Only one column found", 
                             this->row, 
                             this->cell,
                             extract_context(buffer, amount, pos)
@@ -142,7 +142,7 @@ struct parse_state {
                     // here goes fix_broken_line_breaks
 
                     this->valid = false;
-                    this->error_desc = std::format("At row {}, cell {}, near '{}': Inconsistent column amount", 
+                    this->error_desc = fmt::format("At row {}, cell {}, near '{}': Inconsistent column amount", 
                         this->row, 
                         this->cell, 
                         extract_context(buffer, amount, pos)
@@ -175,7 +175,7 @@ struct parse_state {
                 if (this->row == 0) {
                     if (this->cell == 1) {
                         this->valid = false;
-                        this->error_desc = std::format("At row {}, cell {}, near >>>{}<<<: Only one column found", 
+                        this->error_desc = fmt::format("At row {}, cell {}, near >>>{}<<<: Only one column found", 
                             this->row, 
                             this->cell,
                             extract_context(buffer, amount, pos)
@@ -190,7 +190,7 @@ struct parse_state {
                     this->column_numeric.resize(this->cells_first_row, true);
                 } else if (this->cells_first_row != this->cell) {
                     // here goes fix_broken_line_breaks
-                    this->error_desc = std::format("At row {}, cell {}, near '{}': Inconsistent column amount", 
+                    this->error_desc = fmt::format("At row {}, cell {}, near '{}': Inconsistent column amount", 
                             this->row, 
                             this->cell, 
                             extract_context(buffer, amount, pos)
@@ -209,7 +209,7 @@ struct parse_state {
                 && c == '\r'
             ) {
                 this->valid = false;
-                this->error_desc = std::format("At row {}, cell {}, near '{}': CR detected, seems like CRLF line breaks", 
+                this->error_desc = fmt::format("At row {}, cell {}, near '{}': CR detected, seems like CRLF line breaks", 
                     this->row, 
                     this->cell, 
                     extract_context(buffer, amount, pos)
@@ -266,7 +266,7 @@ struct parse_state {
 
             if (this->current_field_had_quote && !this->quote_active) {
                 this->valid = false;
-                this->error_desc = std::format("At row {}, cell {}, near '{}': Mixed quoting detected", 
+                this->error_desc = fmt::format("At row {}, cell {}, near '{}': Mixed quoting detected", 
                     this->row, 
                     this->cell, 
                     extract_context(buffer, amount, pos)
