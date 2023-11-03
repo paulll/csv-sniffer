@@ -5,5 +5,6 @@ RUN apt-get -qq update && \
     rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 && \
     update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+COPY . /build
 RUN mkdir -p /build/target && cd /build/target && cmake .. && make
 ENTRYPOINT /build/target/csv_bruteforcer
