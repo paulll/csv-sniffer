@@ -1,0 +1,15 @@
+name: Build for GHCR
+on:
+  push:
+    branches: [ "master" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: 'Github Container Registry: Build and push Docker image'
+      uses: pmorelli92/github-container-registry-build-push@2.1.0
+      with:
+        github-push-secret: ${{secrets.GITHUB_TOKEN}}
+        docker-image-name: csv-sniffer
