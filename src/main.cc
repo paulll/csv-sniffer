@@ -51,6 +51,7 @@ struct parse_state {
     bool current_field_had_quote;
     bool has_header;
     bool current_field_is_not_header;
+    bool prev_field_is_not_header;
     bool cell_numeric;
     bool cell_empty;
     
@@ -90,6 +91,7 @@ struct parse_state {
         allow_mixed_quoting(false),
         has_header(true),
         current_field_is_not_header(false),
+        prev_field_is_not_header(false),
         cell_empty(true),
         cell_numeric(true),
         column_empty({}),
@@ -133,7 +135,7 @@ struct parse_state {
                         return;
                     }
                     // header detection
-                    this->has_header = this->has_header && this->current_field_is_not_header;
+                    this->has_header = this->has_header && !this->prev_field_is_not_header;
 
                     this->cells_first_row = this->cell;
                     this->column_empty.resize(this->cells_first_row, true);
@@ -183,7 +185,7 @@ struct parse_state {
                         return;
                     }
                     // header detection
-                    this->has_header = this->has_header && this->current_field_is_not_header;
+                    this->has_header = this->has_header && !this->prev_field_is_not_header;
                     
                     this->cells_first_row = this->cell;
                     this->column_empty.resize(this->cells_first_row, true);
@@ -247,8 +249,12 @@ struct parse_state {
                     this->row == 0 
                     && this->has_header
                 ) {
-                    if (this->current_field_is_not_header || this->cell_empty) {
+                    if (this->prev_field_is_not_header ) {
                         this->has_header = false;
+                    }
+                    this->prev_field_is_not_header = this->current_field_is_not_header;
+                    if (this->cell_empty) {
+                        this->prev_field_is_not_header = true;
                     }
                 }
 
